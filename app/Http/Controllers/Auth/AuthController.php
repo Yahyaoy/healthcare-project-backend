@@ -15,6 +15,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
+            'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:8',
             'national_id' =>'required|string|unique:users' , // رقم الهوية ما بتكرر
             'health_insurance_number'=> 'nullable|string',
@@ -28,7 +29,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'username' => 'required|string|max:255|unique:users',
             'role' => 'patient',
             'national_id' => $validated['national_id'],
             'health_insurance_number' => $validated['health_insurance_number'],
@@ -43,7 +44,6 @@ class AuthController extends Controller
             $path = $request->file('identity_image')->store('identity_images', 'public');
             $user->update(['identity_image' => $path]);
         }
-        dd(555);
         return response()->json(['message' => 'Patient registered successfully!', 'user' => $user], 201);
 
     }
@@ -54,7 +54,6 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name ' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:8',
             'specialty' => 'required|string', // تخصص الدكتور مثلا باطنة او اطفال او ..
             'phone_number' => 'nullable|string',
             'address' => 'nullable|string',
@@ -63,7 +62,6 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email'=> $validated['email'],
-            'password' => Hash::make($validated['password']),
             'role' =>'doctor',
             'specialty' => $validated['specialty'],
             'phone_number' => $validated['phone_number'],

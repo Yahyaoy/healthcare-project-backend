@@ -16,7 +16,6 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'username' => 'required|string|max:255|unique:users',
-            'password' => 'required|string|min:8',
             'national_id' =>'required|string|unique:users' , // رقم الهوية ما بتكرر
             'health_insurance_number'=> 'nullable|string',
             'age' => 'nullable|integer' ,
@@ -37,8 +36,8 @@ class AuthController extends Controller
             'gender' => $validated['gender'],
             'phone_number' => $validated['phone_number'],
             'address' => $validated['address'],
+            'is_verified' => false
         ]);
-
 
         if ($request->hasFile('identity_image')) { // Make check
             $path = $request->file('identity_image')->store('identity_images', 'public');
@@ -66,10 +65,10 @@ class AuthController extends Controller
             'specialty' => $validated['specialty'],
             'phone_number' => $validated['phone_number'],
             'address' => $validated['address'],
+            'is_verified' => false // غير مفعّل
+
         ]);
 
         return response()->json(['message' =>'Doctor registered successfully!', 'user' => $user], 201);
     }
-
-
 }

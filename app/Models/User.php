@@ -39,4 +39,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+        public function approvedBy(){ // علاقة الاداري
+            return $this->belongsTo(User::class,'admin_id');
+        }
 }

@@ -28,7 +28,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'username' => 'required|string|max:255|unique:users',
+            'username' => $validated['username'],
             'role' => 'patient',
             'national_id' => $validated['national_id'],
             'health_insurance_number' => $validated['health_insurance_number'],
@@ -70,5 +70,35 @@ class AuthController extends Controller
         ]);
 
         return response()->json(['message' =>'Doctor registered successfully!', 'user' => $user], 201);
+    }
+
+    public function login(Request $request)
+    {
+        // Validate
+        $request->validate([
+            'username'=>'required|string',
+            'password'=>'required|string',
+        ]);
+
+        // find the user by username
+        $user= User::where('username',$request->username)->first();
+
+        // Check if user exists  and password correct
+        if (!$user||!Hash::check($request->password,$user->password)) {
+            return response()->json(['message'=> 'Invalid credentials'], 401);
+        }
+        // Generate a token for the user
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user'=>[
+                'id'=> $user->id,
+                'username'=> $user->username,
+                'email'=>$user->email,
+                'role'=> $user->role, // admin,patient,doctor
+             ],
+        ], 200);
     }
 }

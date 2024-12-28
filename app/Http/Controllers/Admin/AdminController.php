@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+
 class AdminController extends Controller
 {
    // رح نعرض كل المستخدمين الي هما المرضى والاطباء مع الاداري
@@ -35,8 +37,13 @@ class AdminController extends Controller
         ]);
 
         // إرسال بيانات تسجيل  الدخول الى البريد الإلكتروني
-       //راح نعملها الكوميت الجاي
-
+        Mail::raw(
+            "Your account has been approved.\n\nUsername: {$user->username}\nPassword: {$request->password}",
+            function ($message) use ($user) {
+                $message->to($user->email)
+                    ->subject('Account Approved');
+            }
+        );
         return response()->json(['message' =>'User is verified successfully', 'user' =>$user], 200);
     }
 

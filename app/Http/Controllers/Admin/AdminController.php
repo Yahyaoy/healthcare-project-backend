@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -22,26 +23,25 @@ class AdminController extends Controller
     // التحقق من المستخدم وتوليد كلمة المرور
     public function verifyUser(Request $request, $username)
     {
-        $request->validate([
-            'password' =>'required|string|min:8',
-        ]);
 
         // البحث عن المستخدم باستخدام اسم المستخدم
         $user = User::where('username',$username)->firstOrFail();
 
+        $randomPassword = Str::random(10);
         // تحديث بيانات المستخدم
         $user->update([
-            'password' =>Hash::make($request->password),
+            'password' =>Hash::make($randomPassword),
             'is_verified'=> true,
             'admin_id'=> auth()->id(), //  تسجيل الإداري المسؤول
         ]);
 
         // إرسال بيانات تسجيل  الدخول الى البريد الإلكتروني
         Mail::raw(
-            "Your account has been approved.\n\nUsername: {$user->username}\nPassword: {$request->password}",
+            "Your account has been approved.\n\nUsername: {$user->username}\nPassword: {$randomPassword}",
             function ($message) use ($user) {
                 $message->to($user->email)
-                    ->subject('Account Approved');
+                    ->subject('Account Approved')
+                    ->from('yahsheek01@gmail.com', 'Healthcare System');;
             }
         );
         return response()->json(['message' =>'User is verified successfully', 'user' =>$user], 200);

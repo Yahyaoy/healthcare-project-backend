@@ -26,7 +26,7 @@ Route::post('/login',[AuthController::class, 'login']);
 // to admin
 Route::middleware(['auth:sanctum','isAdmin'])->group(function () {
     Route::get('admin/all-users', [AdminController::class, 'getAllUsers']);
-    Route::post('/admin/verify-user/{username}', [AdminController::class, 'verifyUser']);
+        Route::post('/admin/verify-user/{username}', [AdminController::class, 'verifyUser']);
     Route::delete('/admin/delete-user/{username}', [AdminController::class,'deleteUser']);
     Route::get('/admin/pending-users',[AdminController::class,'pendingUsers']);
 });

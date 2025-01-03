@@ -14,10 +14,18 @@ class AdminController extends Controller
    // رح نعرض كل المستخدمين الي هما المرضى والاطباء مع الاداري
     public function getAllUsers()
     {
-        $users = User::all();
+        // Fetch users by roles
+        $admins = User::where('role', 'admin')->get();
+        $doctors = User::where('role', 'doctor')->get();
+        $patients = User::where('role', 'patient')->get();
+
         return response()->json([
-            'message' =>'All users get successfully.',
-            'users'=> $users,
+            'message' => 'All users fetched successfully.',
+            'data' => [
+                'admins' => $admins,
+                'doctors' => $doctors,
+                'patients' => $patients,
+            ],
         ], 200);
     }
     // التحقق من المستخدم وتوليد كلمة المرور

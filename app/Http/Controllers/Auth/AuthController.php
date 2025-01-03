@@ -50,14 +50,14 @@ class AuthController extends Controller
 
     public function registerDoctor(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'username' => 'required|string|max:255|unique:users',
-            'specialty' => 'required|string', // تخصص الدكتور مثلا باطنة او اطفال او ..
-            'phone_number' => 'nullable|string',
-            'address' => 'nullable|string',
-        ]);
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users',
+                'username' => 'required|string|max:255|unique:users',
+                'specialty' => 'nullable|in:Dermatologist,Anesthesiologist,Ophthalmologist,Pediatrist,Nephrologist,Psychiatrist,Pathology', // تخصص الدكتور مثلا باطنة او اطفال او ..
+                'phone_number' => 'nullable|string',
+                'address' => 'nullable|string',
+            ]);
 
         $user = User::create([
             'name' => $validated['name'],

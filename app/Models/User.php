@@ -43,4 +43,14 @@ class User extends Authenticatable
         public function approvedBy(){ // علاقة الاداري
             return $this->belongsTo(User::class,'admin_id');
         }
+
+        public function schedules()
+        {
+            return $this->hasMany(DoctorSchedule::class, 'doctor_id');
+        }
+
+        public function appointments()
+        {
+            return $this->hasMany(Appointment::class, 'patient_id');
+        }
 }

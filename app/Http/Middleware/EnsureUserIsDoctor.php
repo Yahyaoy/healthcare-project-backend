@@ -16,7 +16,7 @@ class EnsureUserIsDoctor
     public function handle(Request $request, Closure $next): Response
     {
         // تحقق إذا كان المستخدم مسجل دخول ولديه  " role => doctor"
-        if (auth()->check() && auth()->user()->role === 'doctor') {
+        if (auth('api')->check() && auth('api')->user()->role === 'doctor') {
             return $next($request);
         }
         // إذا لم يكن المستخدم اداري، ابعث خطأ

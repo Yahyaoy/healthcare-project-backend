@@ -120,5 +120,26 @@ class PatientController extends Controller
         ]);
     }
 
+    public function getMyAppointments()
+    {
+        // Ensure the user is authenticated and is patient
+        $user = auth()->user();
+
+        if ($user->role!== 'patient') {
+            return response()->json(['message'=> 'Unauthorized access.'], 403);
+        }
+
+        // Fetch all appointments for the authenticated patient
+        $appointments = \App\Models\Appointment::where('patient_id', $user->id)
+            ->with(['doctor:id,name,email,phone_number,specialty'])
+            ->orderBy('start_time', 'asc')
+            ->get(['id', 'doctor_id','start_time','end_time','status']);
+
+        return response()->json([
+            'message' =>'Appointments retrieved successfully.',
+            'appointments'=> $appointments,
+        ], 200);
+    }
+
 
 }

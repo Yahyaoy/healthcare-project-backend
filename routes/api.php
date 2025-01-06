@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -27,12 +26,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register/patient', [AuthController::class, 'registerPatient']);
 Route::post('/register/doctor', [AuthController::class, 'registerDoctor']);
 Route::post('/login',[AuthController::class, 'login']);
-Route::get('/', function (){
-    return response()->json([
-        'message' =>'All users get successfully.',
-        'users'=> 'asd',
-    ], 200);
-});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/doctors', [PatientController::class, 'getDoctors']);

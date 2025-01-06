@@ -12,7 +12,7 @@ class EnsureUserIsAdmin
     public function handle(Request $request, Closure $next): Response
     {
         // تحقق إذا كان المستخدم مسجل دخول ولديه  " role => admin"
-        if (auth()->check() && auth()->user()->role === 'admin') {
+        if (auth('api')->check() && auth('api')->user()->role === 'admin') {
             return $next($request);
         }
 

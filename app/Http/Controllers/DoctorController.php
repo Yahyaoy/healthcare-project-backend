@@ -58,6 +58,80 @@ class DoctorController extends Controller
     }
 
 
+    public function approveAppointment($id)
+    {
+        // Find the appointment
+        $appointment = Appointment::find($id);
 
+        if (!$appointment) {
+            return response()->json([
+                'status'=> 'error',
+                'message' =>'Appointment not found',
+            ], 404);
+        }
+
+        // Check if the appointment is already approved or rejected
+        if ($appointment->status ==='approved') {
+            return response()->json([
+                'status' =>'error',
+                'message' =>'Appointment is already approved',
+            ], 400);
+        }
+
+        if ($appointment->status ==='rejected') {
+            return response()->json([
+                'status' =>'error',
+                'message'=> 'Appointment has already been rejected',
+            ], 400);
+        }
+
+        // Update the appointment status to approved
+        $appointment->status='approved';
+        $appointment->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Appointment approved successfully',
+            'appointment' => $appointment,
+        ], 200);
+    }
+
+    public function rejectAppointment($id)
+    {
+        // Find  appointment
+        $appointment =Appointment::find($id);
+
+        if (!$appointment){
+            return response()->json([
+                'status' =>'error',
+                'message'=> 'Appointment not found',
+            ], 404);
+        }
+
+        // Check if the appointment is approved or rejected
+        if ($appointment->status === 'approved') {
+            return response()->json([
+                'status' => 'error',
+                'message' =>'Appointment is already approved and cannot be rejected',
+            ], 400);
+        }
+
+        if ($appointment->status === 'rejected') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Appointment has already been rejected',
+            ], 400);
+        }
+
+        // Update the appointment status to rejected
+        $appointment->status = 'rejected';
+        $appointment->save();
+
+        return response()->json([
+            'status'=> 'success',
+            'message' =>'Appointment rejected successfully',
+            'appointment' => $appointment,
+        ], 200);
+    }
 
 }
